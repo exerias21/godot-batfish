@@ -1,0 +1,25 @@
+services:
+  batfish:
+    image: batfish/batfish:latest
+    container_name: batfish
+    ports:
+      - "9997:9997"
+      - "9996:9996"
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: network-twin-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/snapshot:/app/snapshot
+      - ./backend/app.py:/app/app.py
+    depends_on:
+      - batfish
+    environment:
+      - BATFISH_HOST=batfish
+      - SNAPSHOT_PATH=/app/snapshot
+    restart: unless-stopped

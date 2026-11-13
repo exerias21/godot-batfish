@@ -1,0 +1,451 @@
+[gd_scene load_steps=3 format=3 uid="uid://b00g4c1r11x7w"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_main"]
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 1
+background_color = Color(0.04, 0.05, 0.08, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.28, 0.35, 0.48, 1)
+ambient_light_energy = 1.0
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_main")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="SunLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 8, 14, 10)
+light_color = Color(0.9, 0.95, 1, 1)
+light_energy = 1.2
+
+[node name="BackLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, 0.353553, -0.353553, 0, 0.707107, 0.707107, 0.5, 0.612372, -0.612372, -8, 14, -10)
+light_color = Color(0.35, 0.45, 0.65, 1)
+light_energy = 0.6
+
+[node name="Camera3D" type="Camera3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 4, 16)
+current = true
+fov = 46.0
+
+[node name="Graph3D" type="Node3D" parent="."]
+
+[node name="EdgesContainer" type="Node3D" parent="Graph3D"]
+unique_name_in_owner = true
+
+[node name="NodesContainer" type="Node3D" parent="Graph3D"]
+unique_name_in_owner = true
+
+[node name="TraceContainer" type="Node3D" parent="Graph3D"]
+unique_name_in_owner = true
+
+[node name="PacketOrb" type="MeshInstance3D" parent="Graph3D"]
+unique_name_in_owner = true
+visible = false
+
+[node name="SelectionRing" type="MeshInstance3D" parent="Graph3D"]
+unique_name_in_owner = true
+visible = false
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="TopPanel" type="PanelContainer" parent="UI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 18.0
+offset_top = 14.0
+offset_right = -18.0
+offset_bottom = 66.0
+grow_horizontal = 2
+
+[node name="Margin" type="MarginContainer" parent="UI/TopPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 6
+
+[node name="HBox" type="HBoxContainer" parent="UI/TopPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="UI/TopPanel/Margin/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "NETWORK DIGITAL TWIN 3D"
+
+[node name="VSep1" type="VSeparator" parent="UI/TopPanel/Margin/HBox"]
+layout_mode = 2
+
+[node name="ScenarioBadge" type="Label" parent="UI/TopPanel/Margin/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.88, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "Scenario: Healthy Baseline"
+
+[node name="Spacer" type="Control" parent="UI/TopPanel/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CamHelp" type="Label" parent="UI/TopPanel/Margin/HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.85, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "💡 Click a Device for Details | 🖱️ Left-Drag: Orbit | Right/Mid-Drag: Pan | Scroll: Zoom"
+
+[node name="VSep2" type="VSeparator" parent="UI/TopPanel/Margin/HBox"]
+layout_mode = 2
+
+[node name="WsStatus" type="Label" parent="UI/TopPanel/Margin/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.75, 0.25, 1)
+theme_override_font_sizes/font_size = 13
+text = "Connecting..."
+
+[node name="BottomPanel" type="PanelContainer" parent="UI"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = -215.0
+offset_right = -18.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="UI/BottomPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="UI/BottomPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ScenariosRow" type="HBoxContainer" parent="UI/BottomPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ScenLabel" type="Label" parent="UI/BottomPanel/Margin/VBox/ScenariosRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.78, 0.3, 1)
+theme_override_font_sizes/font_size = 13
+text = "Simulate Scenarios:"
+
+[node name="BtnHealthy" type="Button" parent="UI/BottomPanel/Margin/VBox/ScenariosRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 32)
+layout_mode = 2
+text = "1. Normal (Healthy)"
+
+[node name="BtnFailover" type="Button" parent="UI/BottomPanel/Margin/VBox/ScenariosRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 32)
+layout_mode = 2
+text = "2. Failover (dist-r1 Down)"
+
+[node name="BtnSevered" type="Button" parent="UI/BottomPanel/Margin/VBox/ScenariosRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 32)
+layout_mode = 2
+text = "3. Blackhole (edge-r1 Cut)"
+
+[node name="BtnACL" type="Button" parent="UI/BottomPanel/Margin/VBox/ScenariosRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 32)
+layout_mode = 2
+text = "4. Security (ACL Drop)"
+
+[node name="FaultInjectionRow" type="HBoxContainer" parent="UI/BottomPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="FaultLabel" type="Label" parent="UI/BottomPanel/Margin/VBox/FaultInjectionRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "⚡ Remove / Cut Link:"
+
+[node name="BtnCutDist1Core" type="Button" parent="UI/BottomPanel/Margin/VBox/FaultInjectionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 30)
+layout_mode = 2
+text = "Cut: core-r1 <-> dist-r1"
+
+[node name="BtnCutDist1Edge1" type="Button" parent="UI/BottomPanel/Margin/VBox/FaultInjectionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 30)
+layout_mode = 2
+text = "Cut: dist-r1 <-> edge-r1"
+
+[node name="BtnCutDist2Edge1" type="Button" parent="UI/BottomPanel/Margin/VBox/FaultInjectionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 30)
+layout_mode = 2
+text = "Cut: dist-r2 <-> edge-r1"
+
+[node name="BtnRestoreAll" type="Button" parent="UI/BottomPanel/Margin/VBox/FaultInjectionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+text = "🔄 Restore All Links"
+
+[node name="TraceControlsRow" type="HBoxContainer" parent="UI/BottomPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SrcLabel" type="Label" parent="UI/BottomPanel/Margin/VBox/TraceControlsRow"]
+layout_mode = 2
+text = "Source:"
+
+[node name="SrcSelect" type="OptionButton" parent="UI/BottomPanel/Margin/VBox/TraceControlsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 32)
+layout_mode = 2
+
+[node name="DstLabel" type="Label" parent="UI/BottomPanel/Margin/VBox/TraceControlsRow"]
+layout_mode = 2
+text = "Target:"
+
+[node name="DstSelect" type="OptionButton" parent="UI/BottomPanel/Margin/VBox/TraceControlsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 32)
+layout_mode = 2
+
+[node name="TraceButton" type="Button" parent="UI/BottomPanel/Margin/VBox/TraceControlsRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 32)
+layout_mode = 2
+text = "▶ Run Trace Simulation"
+
+[node name="ResetCamBtn" type="Button" parent="UI/BottomPanel/Margin/VBox/TraceControlsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reset 3D View"
+
+[node name="ConfigToggleBtn" type="Button" parent="UI/BottomPanel/Margin/VBox/TraceControlsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Cisco Config Editor"
+
+[node name="StatusLabel" type="Label" parent="UI/BottomPanel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.88, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "Ready. Awaiting topology initialization from Batfish..."
+
+[node name="DeviceDetailsPanel" type="PanelContainer" parent="UI"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -360.0
+offset_top = 76.0
+offset_right = -18.0
+offset_bottom = 480.0
+grow_horizontal = 0
+
+[node name="Margin" type="MarginContainer" parent="UI/DeviceDetailsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="UI/DeviceDetailsPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderHBox" type="HBoxContainer" parent="UI/DeviceDetailsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="VBoxName" type="VBoxContainer" parent="UI/DeviceDetailsPanel/Margin/VBox/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DeviceNameLabel" type="Label" parent="UI/DeviceDetailsPanel/Margin/VBox/HeaderHBox/VBoxName"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.88, 1, 1)
+theme_override_font_sizes/font_size = 17
+text = "Router: core-r1"
+
+[node name="DeviceRoleLabel" type="Label" parent="UI/DeviceDetailsPanel/Margin/VBox/HeaderHBox/VBoxName"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+text = "[ Core Layer Router ]"
+
+[node name="CloseDeviceBtn" type="Button" parent="UI/DeviceDetailsPanel/Margin/VBox/HeaderHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+text = "✕"
+
+[node name="HSep1" type="HSeparator" parent="UI/DeviceDetailsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="StatusRow" type="HBoxContainer" parent="UI/DeviceDetailsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="UI/DeviceDetailsPanel/Margin/VBox/StatusRow"]
+layout_mode = 2
+text = "Status:"
+
+[node name="DeviceStatusLabel" type="Label" parent="UI/DeviceDetailsPanel/Margin/VBox/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.25, 0.95, 0.45, 1)
+text = "● ONLINE (Batfish Twin)"
+
+[node name="LoopbackRow" type="HBoxContainer" parent="UI/DeviceDetailsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="UI/DeviceDetailsPanel/Margin/VBox/LoopbackRow"]
+layout_mode = 2
+text = "Loopback0:"
+
+[node name="DeviceLoopbackLabel" type="Label" parent="UI/DeviceDetailsPanel/Margin/VBox/LoopbackRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+text = "10.0.0.1/32"
+
+[node name="OspfRow" type="HBoxContainer" parent="UI/DeviceDetailsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="UI/DeviceDetailsPanel/Margin/VBox/OspfRow"]
+layout_mode = 2
+text = "OSPF Routing:"
+
+[node name="DeviceOspfLabel" type="Label" parent="UI/DeviceDetailsPanel/Margin/VBox/OspfRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+text = "Process 1 | Area 0"
+
+[node name="HSep2" type="HSeparator" parent="UI/DeviceDetailsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="IfaceHeader" type="Label" parent="UI/DeviceDetailsPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.35, 1)
+theme_override_font_sizes/font_size = 12
+text = "INTERFACES & ADJACENCIES:"
+
+[node name="DeviceInterfacesList" type="VBoxContainer" parent="UI/DeviceDetailsPanel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Spacer" type="Control" parent="UI/DeviceDetailsPanel/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionRow" type="HBoxContainer" parent="UI/DeviceDetailsPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BtnDeviceSetSrc" type="Button" parent="UI/DeviceDetailsPanel/Margin/VBox/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "⚡ Set as Source"
+
+[node name="BtnDeviceViewCfg" type="Button" parent="UI/DeviceDetailsPanel/Margin/VBox/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "📝 View Config"
+
+[node name="ConfigModal" type="PanelContainer" parent="UI"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -250.0
+offset_right = 390.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="UI/ConfigModal"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="UI/ConfigModal/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="UI/ConfigModal/Margin/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UI/ConfigModal/Margin/VBox/Header"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Live Router Configuration & Fault Testing"
+
+[node name="Spacer" type="Control" parent="UI/ConfigModal/Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseConfigBtn" type="Button" parent="UI/ConfigModal/Margin/VBox/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+text = "✕"
+
+[node name="SelectRow" type="HBoxContainer" parent="UI/ConfigModal/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="UI/ConfigModal/Margin/VBox/SelectRow"]
+layout_mode = 2
+text = "Device:"
+
+[node name="ConfigRouterSelect" type="OptionButton" parent="UI/ConfigModal/Margin/VBox/SelectRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+
+[node name="Hint" type="Label" parent="UI/ConfigModal/Margin/VBox/SelectRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.85, 1)
+theme_override_font_sizes/font_size = 12
+text = "(Edit interface shutdown or OSPF/ACLs below)"
+
+[node name="ConfigTextEdit" type="TextEdit" parent="UI/ConfigModal/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 12
+
+[node name="Footer" type="HBoxContainer" parent="UI/ConfigModal/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="SaveConfigBtn" type="Button" parent="UI/ConfigModal/Margin/VBox/Footer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 34)
+layout_mode = 2
+text = "Apply Changes & Re-simulate"
